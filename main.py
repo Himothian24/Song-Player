@@ -56,9 +56,5 @@ while True:
         x = x + 350
 
     screen.blit(text, text_rect)
-    #song2.draw(screen)
-    #song.draw(screen)
-
-    
     
     pygame.display.update()
