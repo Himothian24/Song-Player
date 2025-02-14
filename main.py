@@ -1,11 +1,19 @@
 import pygame
+import os
 
 pygame.init()
 pygame.mixer.init()
 
-song1 = "music/Raving Energy (faster).mp3"
-song_2 = "music/Deep and Dirty.mp3"
+songs = os.listdir("music/")
 
+
+
+def get_song_name(song):
+    song = song.split("/")[-1]
+    song = song.split(".")[0]
+
+    return song
+    
 screen = pygame.display.set_mode((800,600))
 
 pygame.display.set_caption("Test game")
@@ -17,15 +25,14 @@ text_rect.center = (screen.get_width() // 2, 50)
 
 class Button():
     def __init__(self, x, y, width, height, song):
-        size = 23.5
-        if len(song) > size:
-            size = 17
+       
         self.rect = pygame.Rect(x, y, width, height)
-        self.text = song
+        self.text = get_song_name(song)
+        size = 25-(len(self.text)//10)
         self.font = pygame.font.Font(None, size)
         self.text_surf = self.font.render(self.text, True, (255, 255, 255))
         self.text_rect = self.text_surf.get_rect(center=self.rect.center)
-        self.song = pygame.mixer.Sound(song)
+        self.song = pygame.mixer.Sound("music/"+song)
 
     def draw(self, screen):
         pygame.draw.rect(screen, (0, 0, 0), self.rect)
@@ -37,7 +44,12 @@ class Button():
             self.song.play()
         return False
 
-button_list = [Button(50, 400, 200, 50, song1), Button(350, 400, 200, 50, song_2)]
+button_list = []
+x = 50
+for song in songs:
+    button_list += [Button(x, 400, 200, 50, song)]
+    x = x + 250
+
 
 while True:
     screen.fill((255,0,0))
@@ -50,10 +62,7 @@ while True:
                 thing.is_clicked()
     
     for thing in button_list:
-        x = 50
-        thing.x = x
         thing.draw(screen)
-        x = x + 350
 
     screen.blit(text, text_rect)
     
