@@ -41,12 +41,13 @@ text_rect.center = (screen.get_width() // 2, 50)
 class Button():
     def __init__(self, x, y, width, height, song):
         self.rect = pygame.Rect(x, y, width, height)  # Button rectangle
-        self.song = pygame.mixer.Sound("music/" + song)  # Load the song
+        self.song = pygame.mixer.Sound(song)  # Load the specific song for this button
         self.text = get_song_name(song)  # Button text
         size = 25 - (len(self.text) // 10)  # Adjust font size based on text length
         self.font = pygame.font.Font(None, size)
         self.text_surf = self.font.render(self.text, True, (255, 255, 255))  # Render text
         self.text_rect = self.text_surf.get_rect(center=self.rect.center)  # Center text in button
+
         
 
     def draw(self, screen):
@@ -63,30 +64,37 @@ class Button():
 print(get_full_filepaths("music"))
 
 
-# # Create a list of buttons for each song
-# button_list = []
-# x = 50
-# for song in songs:
-#     # if not song.endswith(".mp3"):
-#     #     for other_song in os.listdir("music/" + other_song + "/" + song):
-#     #         button_list.append(Button(x, 400, 200, 50, other_song))
-#     button_list.append(Button(x, 400, 200, 50, song))  # Create a button for each song
-#     x += 250  # Position the next button
+# Create a list of buttons for each song
+# Create buttons for each song
+music = get_full_filepaths("music")
+button_list = []
 
-# # Main game loop
-# while True:
-#     screen.fill((255, 0, 0))  # Fill the screen with red color
-#     for event in pygame.event.get():  # Event handling
-#         if event.type == pygame.QUIT:  # Quit event
-#             pygame.quit()
-#             quit()
-#         if event.type == pygame.MOUSEBUTTONDOWN:  # Mouse click event
-#             for button in button_list:
-#                 button.is_clicked()  # Check if any button is clicked
-    
-#     for button in button_list:
-#         button.draw(screen)  # Draw all buttons
+y = 100
+x = 50
 
-#     screen.blit(text, text_rect)  # Draw the title text
+for song in music:
+    button_list.append(Button(x, y, 200, 50, song))
+    x+= 250
+    if x > 600:
+        y += 100
+        x = 50
     
-#     pygame.display.update()  # Update the display
+
+# Main game loop
+while True:
+    screen.fill((255, 0, 0))  # Fill the screen with red color
+    for event in pygame.event.get():  # Event handling
+        if event.type == pygame.QUIT:  # Quit event
+            pygame.quit()
+            quit()
+        if event.type == pygame.MOUSEBUTTONDOWN:  # Mouse click event
+            for button in button_list:
+                button.is_clicked()  # Check if any button is clicked
+    
+    for button in button_list:
+        button.draw(screen)  # Draw all buttons
+
+    screen.blit(text, text_rect)  # Draw the title text
+    
+    pygame.display.update()  # Update the display
+
